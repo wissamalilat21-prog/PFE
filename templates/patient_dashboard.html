@@ -1,0 +1,353 @@
+{% extends "base.html" %}
+{% block title %}{{ patient.prenom }} {{ patient.nom }} — MediScan Pro{% endblock %}
+
+{% block content %}
+<div class="dashboard-page">
+
+    <div class="dashboard-header">
+        <div class="patient-profile">
+            <div class="patient-avatar">
+                <span>{{ patient.prenom[0] }}{{ patient.nom[0] }}</span>
+                <div class="avatar-ring"></div>
+            </div>
+            <div class="patient-info">
+                <div class="patient-name-row">
+                    <h1>{{ patient.prenom }} <strong>{{ patient.nom }}</strong></h1>
+                    <div class="blood-badge">{{ patient.groupe_sanguin }}</div>
+                </div>
+                <div class="patient-meta">
+                    <div class="meta-item">
+                        <svg viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="18" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M16 2v4M8 2v4M3 10h18" stroke="currentColor" stroke-width="1.5"/></svg>
+                        <span>{{ patient.date_naissance }}</span>
+                    </div>
+                    <div class="meta-item">
+                        <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.5"/><path d="M12 7v5l3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                        <span>{{ patient.age }} <span data-i18n="ans">ans</span></span>
+                    </div>
+                    <div class="meta-item">
+                        <svg viewBox="0 0 24 24" fill="none"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="7" r="4" stroke="currentColor" stroke-width="1.5"/></svg>
+                        <span>{% if patient.sexe == 'M' %}<span data-i18n="masculin">Masculin</span>{% else %}<span data-i18n="feminin">Féminin</span>{% endif %}</span>
+                    </div>
+                    <div class="meta-item">
+                        <svg viewBox="0 0 24 24" fill="none"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z" stroke="currentColor" stroke-width="1.5"/></svg>
+                        <span>ID-{{ '%04d' % patient.id }}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="header-actions">
+                <a href="/patient/new" class="action-btn secondary">
+                    <svg viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                    <span data-i18n="nouveau">Nouveau</span>
+                </a>
+                <button onclick="printPage()" class="action-btn primary">
+                    <svg viewBox="0 0 24 24" fill="none"><path d="M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" stroke="currentColor" stroke-width="1.5"/><rect x="6" y="14" width="12" height="8" rx="1" stroke="currentColor" stroke-width="1.5"/></svg>
+                    <span data-i18n="imprimer">Imprimer</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="dashboard-body">
+
+        <section class="section-card constantes-section">
+            <div class="section-header">
+                <div class="section-icon teal">
+                    <svg viewBox="0 0 24 24" fill="none"><path d="M22 12h-4l-3 9L9 3l-3 9H2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </div>
+                <h2 data-i18n="constantes">Constantes Vitales</h2>
+                <div class="live-badge">
+                    <div class="live-dot"></div>
+                    <span data-i18n="live">En direct</span>
+                </div>
+            </div>
+
+            <div class="constantes-grid">
+                <div class="constante-card sensor" id="card-temp">
+                    <div class="constante-icon" style="--c:#ff6b6b">
+                        <svg viewBox="0 0 24 24" fill="none"><path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z" stroke="currentColor" stroke-width="1.5"/></svg>
+                    </div>
+                    <div class="constante-content">
+                        <span class="constante-label" data-i18n="temperature">Température</span>
+                        <div class="constante-value-row">
+                            <span class="constante-value" id="val-temp">
+                                {% if sensor and sensor.temperature %}{{ sensor.temperature }}{% else %}--{% endif %}
+                            </span>
+                            <span class="constante-unit">°C</span>
+                        </div>
+                        <span class="constante-source sensor-tag" data-i18n="capteur">Capteur MAX30205</span>
+                        <div class="constante-bar"><div class="bar-fill" id="bar-temp" style="width:0%"></div></div>
+                    </div>
+                </div>
+
+                <div class="constante-card sensor" id="card-spo2">
+                    <div class="constante-icon" style="--c:#4ecdc4">
+                        <svg viewBox="0 0 24 24" fill="none"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 14.5c-2.49 0-4.5-2.01-4.5-4.5S9.51 7.5 12 7.5s4.5 2.01 4.5 4.5-2.01 4.5-4.5 4.5z" stroke="currentColor" stroke-width="1.5"/></svg>
+                    </div>
+                    <div class="constante-content">
+                        <span class="constante-label">SpO₂</span>
+                        <div class="constante-value-row">
+                            <span class="constante-value" id="val-spo2">
+                                {% if sensor and sensor.spo2 %}{{ sensor.spo2 }}{% else %}--{% endif %}
+                            </span>
+                            <span class="constante-unit">%</span>
+                        </div>
+                        <span class="constante-source sensor-tag" data-i18n="capteur">Capteur MAX30102</span>
+                        <div class="constante-bar"><div class="bar-fill" id="bar-spo2" style="width:0%"></div></div>
+                    </div>
+                </div>
+
+                <div class="constante-card sensor" id="card-fc">
+                    <div class="constante-icon" style="--c:#f7b731">
+                        <svg viewBox="0 0 24 24" fill="none"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" stroke="currentColor" stroke-width="1.5"/></svg>
+                    </div>
+                    <div class="constante-content">
+                        <span class="constante-label" data-i18n="freq_card">Fréq. Cardiaque</span>
+                        <div class="constante-value-row">
+                            <span class="constante-value" id="val-fc">
+                                {% if sensor and sensor.frequence_cardiaque %}{{ sensor.frequence_cardiaque }}{% else %}--{% endif %}
+                            </span>
+                            <span class="constante-unit">bpm</span>
+                        </div>
+                        <span class="constante-source sensor-tag" data-i18n="capteur">Capteur MAX30102</span>
+                        <div class="constante-bar"><div class="bar-fill" id="bar-fc" style="width:0%"></div></div>
+                    </div>
+                </div>
+
+                <div class="constante-card manual" id="card-tension">
+                    <div class="constante-icon" style="--c:#a29bfe">
+                        <svg viewBox="0 0 24 24" fill="none"><path d="M22 12h-4l-3 9L9 3l-3 9H2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                    </div>
+                    <div class="constante-content">
+                        <span class="constante-label" data-i18n="tension">Tension Artérielle</span>
+                        <div class="constante-value-row">
+                            <input type="text" class="constante-input" id="val-tension" placeholder="120/80" 
+                                   value="{{ consultation.tension if consultation and consultation.tension else '' }}">
+                            <span class="constante-unit">mmHg</span>
+                        </div>
+                        <span class="constante-source manual-tag" data-i18n="manuel">Saisie manuelle</span>
+                    </div>
+                </div>
+
+                <div class="constante-card manual" id="card-glyc">
+                    <div class="constante-icon" style="--c:#fd79a8">
+                        <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.5"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                    </div>
+                    <div class="constante-content">
+                        <span class="constante-label" data-i18n="glycemie">Glycémie</span>
+                        <div class="constante-value-row">
+                            <input type="number" step="0.1" class="constante-input" id="val-glyc" placeholder="5.5"
+                                   value="{{ consultation.glycemie if consultation and consultation.glycemie else '' }}">
+                            <span class="constante-unit">g/L</span>
+                        </div>
+                        <span class="constante-source manual-tag" data-i18n="manuel">Saisie manuelle</span>
+                    </div>
+                </div>
+
+                <div class="constante-card ecg-card sensor" id="card-ecg">
+                    <div class="constante-header-row">
+                        <div class="constante-icon" style="--c:#00d4aa">
+                            <svg viewBox="0 0 24 24" fill="none"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        </div>
+                        <span class="constante-label">ECG</span>
+                        <span class="constante-source sensor-tag" data-i18n="capteur">Capteur AD8226</span>
+                    </div>
+                    <canvas id="ecgCanvas" width="400" height="80"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <form id="consultationForm">
+            <div class="sections-row">
+
+                <section class="section-card compte-rendu-section">
+                    <div class="section-header">
+                        <div class="section-icon blue">
+                            <svg viewBox="0 0 24 24" fill="none"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" stroke="currentColor" stroke-width="1.5"/><polyline points="14 2 14 8 20 8" stroke="currentColor" stroke-width="1.5"/><line x1="16" y1="13" x2="8" y2="13" stroke="currentColor" stroke-width="1.5"/><line x1="16" y1="17" x2="8" y2="17" stroke="currentColor" stroke-width="1.5"/></svg>
+                        </div>
+                        <h2 data-i18n="compte_rendu">Compte Rendu</h2>
+                    </div>
+
+                    <div class="cr-grid">
+                        <div class="cr-field">
+                            <label class="cr-label">
+                                <span class="cr-tag">MDC</span>
+                                <span data-i18n="mdc">Motif de Consultation</span>
+                            </label>
+                            <textarea name="mdc" class="cr-textarea" rows="3" placeholder="Décrivez le motif de consultation...">{{ consultation.mdc if consultation and consultation.mdc else '' }}</textarea>
+                        </div>
+
+                        <div class="cr-field">
+                            <label class="cr-label">
+                                <span class="cr-tag">ATCD</span>
+                                <span data-i18n="atcd">Antécédents</span>
+                            </label>
+                            <textarea name="atcd" class="cr-textarea" rows="3" placeholder="Antécédents médicaux et chirurgicaux...">{{ consultation.atcd if consultation and consultation.atcd else '' }}</textarea>
+                        </div>
+
+                        <div class="cr-field">
+                            <label class="cr-label">
+                                <span class="cr-tag">DG</span>
+                                <span data-i18n="dg">Diagnostic</span>
+                            </label>
+                            <textarea name="dg" class="cr-textarea" rows="3" placeholder="Diagnostic établi...">{{ consultation.dg if consultation and consultation.dg else '' }}</textarea>
+                        </div>
+
+                        <div class="cr-field">
+                            <label class="cr-label">
+                                <span class="cr-tag">CAT</span>
+                                <span data-i18n="cat">Conduite à Tenir</span>
+                            </label>
+                            <textarea name="cat" class="cr-textarea" rows="3" placeholder="Conduite à tenir et recommandations...">{{ consultation.cat if consultation and consultation.cat else '' }}</textarea>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="section-card ordonnance-section">
+                    <div class="section-header">
+                        <div class="section-icon green">
+                            <svg viewBox="0 0 24 24" fill="none"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2" stroke="currentColor" stroke-width="1.5"/><rect x="9" y="3" width="6" height="4" rx="1" stroke="currentColor" stroke-width="1.5"/><path d="M9 12h6M9 16h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                        </div>
+                        <h2 data-i18n="ordonnance">Ordonnance</h2>
+                    </div>
+                    <div class="ordonnance-header">
+                        <div class="rx-symbol">℞</div>
+                        <div class="ordonnance-meta">
+                            <span>{{ patient.prenom }} {{ patient.nom }}</span>
+                            <span id="ord-date"></span>
+                        </div>
+                    </div>
+                    <textarea name="ordonnance" class="ordonnance-textarea" rows="12" 
+                              placeholder="1. Médicament — dose — durée&#10;2. Médicament — dose — durée&#10;...">{{ consultation.ordonnance if consultation and consultation.ordonnance else '' }}</textarea>
+                    <div class="ordonnance-footer">
+                        <span data-i18n="signature">Signature du médecin</span>
+                        <div class="sig-line"></div>
+                    </div>
+                </section>
+
+            </div>
+
+            <div class="save-bar">
+                <div class="save-status" id="saveStatus"></div>
+                <button type="button" onclick="saveConsultation({{ patient.id }})" class="save-btn">
+                    <svg viewBox="0 0 24 24" fill="none"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" stroke="white" stroke-width="1.5"/><polyline points="17 21 17 13 7 13 7 21" stroke="white" stroke-width="1.5"/><polyline points="7 3 7 8 15 8" stroke="white" stroke-width="1.5"/></svg>
+                    <span data-i18n="sauvegarder">Sauvegarder la consultation</span>
+                </button>
+            </div>
+        </form>
+
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+const PATIENT_ID = {{ patient.id }};
+document.getElementById('ord-date').textContent = new Date().toLocaleDateString('fr-FR', {day:'2-digit',month:'long',year:'numeric'});
+
+async function saveConsultation(patientId) {
+    const form = document.getElementById('consultationForm');
+    const formData = new FormData(form);
+    
+    formData.set('tension', document.getElementById('val-tension').value);
+    formData.set('glycemie', document.getElementById('val-glyc').value);
+    formData.set('temperature', document.getElementById('val-temp').textContent.trim());
+    formData.set('spo2', document.getElementById('val-spo2').textContent.trim());
+    formData.set('frequence_cardiaque', document.getElementById('val-fc').textContent.trim());
+
+    const saveBtn = document.querySelector('.save-btn');
+    saveBtn.classList.add('saving');
+    
+    try {
+        const response = await fetch(`/patient/${patientId}/save`, {
+            method: 'POST',
+            body: formData
+        });
+        const result = await response.json();
+        
+        const status = document.getElementById('saveStatus');
+        if (result.success) {
+            status.innerHTML = '<span class="status-ok">✓ Consultation sauvegardée</span>';
+        } else {
+            status.innerHTML = '<span class="status-err">✗ Erreur lors de la sauvegarde</span>';
+        }
+        setTimeout(() => status.innerHTML = '', 3000);
+    } catch(e) {
+        console.error(e);
+    }
+    saveBtn.classList.remove('saving');
+}
+
+function printPage() {
+    window.print();
+}
+
+let ecgData = [];
+const ecgCanvas = document.getElementById('ecgCanvas');
+const ctx = ecgCanvas.getContext('2d');
+
+function drawECG(data) {
+    const w = ecgCanvas.width, h = ecgCanvas.height;
+    ctx.clearRect(0, 0, w, h);
+    ctx.strokeStyle = '#00d4aa';
+    ctx.lineWidth = 1.5;
+    ctx.shadowColor = '#00d4aa';
+    ctx.shadowBlur = 6;
+    ctx.beginPath();
+    
+    if (!data || data.length === 0) {
+        const pts = 200;
+        for (let i = 0; i < pts; i++) {
+            const x = (i / pts) * w;
+            const phase = (i / pts) * Math.PI * 8;
+            const y = h/2 - Math.sin(phase) * 10 - Math.sin(phase * 3) * 3;
+            i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+        }
+    } else {
+        const step = w / data.length;
+        data.forEach((v, i) => {
+            const x = i * step;
+            const y = h/2 - (v / 4096) * h * 0.8;
+            i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+        });
+    }
+    ctx.stroke();
+}
+
+async function fetchSensorData() {
+    try {
+        const res = await fetch('/api/sensor/latest');
+        const data = await res.json();
+        
+        if (data.patient_id == PATIENT_ID || data.patient_id === null) {
+            if (data.temperature !== null) {
+                document.getElementById('val-temp').textContent = data.temperature.toFixed(1);
+                const barT = Math.min(((data.temperature - 35) / 7) * 100, 100);
+                document.getElementById('bar-temp').style.width = barT + '%';
+                document.getElementById('bar-temp').style.background = data.temperature > 38 ? '#ff6b6b' : '#00d4aa';
+            }
+            if (data.spo2 !== null) {
+                document.getElementById('val-spo2').textContent = data.spo2.toFixed(0);
+                document.getElementById('bar-spo2').style.width = data.spo2 + '%';
+                document.getElementById('bar-spo2').style.background = data.spo2 < 95 ? '#ff6b6b' : '#4ecdc4';
+            }
+            if (data.frequence_cardiaque !== null) {
+                document.getElementById('val-fc').textContent = data.frequence_cardiaque;
+                const barFC = Math.min(((data.frequence_cardiaque - 40) / 120) * 100, 100);
+                document.getElementById('bar-fc').style.width = barFC + '%';
+                document.getElementById('bar-fc').style.background = data.frequence_cardiaque > 100 || data.frequence_cardiaque < 60 ? '#f7b731' : '#00d4aa';
+            }
+            if (data.ecg_data) {
+                try { ecgData = JSON.parse(data.ecg_data); } catch(e) { ecgData = []; }
+            }
+        }
+    } catch(e) {}
+    
+    drawECG(ecgData);
+}
+
+fetchSensorData();
+setInterval(fetchSensorData, 2000);
+
+drawECG([]);
+</script>
+{% endblock %}

@@ -1,0 +1,149 @@
+{% extends "base.html" %}
+{% block title %}Nouveau Patient — MediScan Pro{% endblock %}
+
+{% block content %}
+<div class="form-page">
+    <div class="form-left">
+        <div class="form-left-inner">
+            <div class="form-badge" data-i18n="new_patient">Nouveau Patient</div>
+            <h1 class="form-headline" data-i18n="form_title">Enregistrement<br><em>du Patient</em></h1>
+            <p class="form-sub" data-i18n="form_sub">Remplissez les informations ci-dessous pour créer le dossier médical du patient.</p>
+            <div class="form-decoration">
+                <div class="deco-ring r1"></div>
+                <div class="deco-ring r2"></div>
+                <div class="deco-ring r3"></div>
+                <svg class="deco-cross" viewBox="0 0 60 60">
+                    <path d="M30 5 L30 55 M5 30 L55 30" stroke="#00d4aa" stroke-width="3" stroke-linecap="round" opacity="0.3"/>
+                </svg>
+            </div>
+            <div class="form-stats">
+                <div class="stat-item">
+                    <span class="stat-num">24/7</span>
+                    <span class="stat-label" data-i18n="monitoring">Monitoring</span>
+                </div>
+                <div class="stat-divider"></div>
+                <div class="stat-item">
+                    <span class="stat-num">ESP32</span>
+                    <span class="stat-label" data-i18n="connected">Connecté</span>
+                </div>
+                <div class="stat-divider"></div>
+                <div class="stat-item">
+                    <span class="stat-num">100%</span>
+                    <span class="stat-label" data-i18n="secure">Sécurisé</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-right">
+        <div class="form-card">
+            <div class="form-card-header">
+                <div class="step-indicator">
+                    <div class="step active">
+                        <span>01</span>
+                        <em data-i18n="patient_info">Informations</em>
+                    </div>
+                    <div class="step-line"></div>
+                    <div class="step">
+                        <span>02</span>
+                        <em data-i18n="consultation">Consultation</em>
+                    </div>
+                </div>
+            </div>
+
+            <form method="POST" action="/patient/new" class="patient-form" id="patientForm">
+                <div class="field-grid">
+                    <div class="field-group">
+                        <label class="field-label" data-i18n="nom">Nom</label>
+                        <div class="field-wrap">
+                            <input type="text" name="nom" class="field-input" required placeholder="ex: Benali" autocomplete="off">
+                            <div class="field-line"></div>
+                        </div>
+                    </div>
+
+                    <div class="field-group">
+                        <label class="field-label" data-i18n="prenom">Prénom</label>
+                        <div class="field-wrap">
+                            <input type="text" name="prenom" class="field-input" required placeholder="ex: Ahmed" autocomplete="off">
+                            <div class="field-line"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="field-group full">
+                    <label class="field-label" data-i18n="date_naissance">Date de naissance</label>
+                    <div class="field-wrap">
+                        <input type="date" name="date_naissance" class="field-input" required>
+                        <div class="field-line"></div>
+                    </div>
+                </div>
+
+                <div class="field-group full">
+                    <label class="field-label" data-i18n="sexe">Sexe</label>
+                    <div class="radio-group">
+                        <label class="radio-card">
+                            <input type="radio" name="sexe" value="M" required>
+                            <div class="radio-inner">
+                                <svg viewBox="0 0 24 24" fill="none">
+                                    <circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="1.5"/>
+                                    <path d="M8 16c0-2.21 1.79-4 4-4s4 1.79 4 4v2H8v-2z" stroke="currentColor" stroke-width="1.5"/>
+                                </svg>
+                                <span data-i18n="masculin">Masculin</span>
+                            </div>
+                        </label>
+                        <label class="radio-card">
+                            <input type="radio" name="sexe" value="F" required>
+                            <div class="radio-inner">
+                                <svg viewBox="0 0 24 24" fill="none">
+                                    <circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="1.5"/>
+                                    <path d="M8 16c0-2.21 1.79-4 4-4s4 1.79 4 4v2H8v-2z" stroke="currentColor" stroke-width="1.5"/>
+                                    <circle cx="12" cy="4" r="1" fill="currentColor"/>
+                                </svg>
+                                <span data-i18n="feminin">Féminin</span>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="field-group full">
+                    <label class="field-label" data-i18n="groupe_sanguin">Groupe Sanguin</label>
+                    <div class="blood-group-grid">
+                        <label class="blood-card"><input type="radio" name="groupe_sanguin" value="A+"><span>A<sup>+</sup></span></label>
+                        <label class="blood-card"><input type="radio" name="groupe_sanguin" value="A-"><span>A<sup>−</sup></span></label>
+                        <label class="blood-card"><input type="radio" name="groupe_sanguin" value="B+"><span>B<sup>+</sup></span></label>
+                        <label class="blood-card"><input type="radio" name="groupe_sanguin" value="B-"><span>B<sup>−</sup></span></label>
+                        <label class="blood-card"><input type="radio" name="groupe_sanguin" value="AB+"><span>AB<sup>+</sup></span></label>
+                        <label class="blood-card"><input type="radio" name="groupe_sanguin" value="AB-"><span>AB<sup>−</sup></span></label>
+                        <label class="blood-card"><input type="radio" name="groupe_sanguin" value="O+"><span>O<sup>+</sup></span></label>
+                        <label class="blood-card"><input type="radio" name="groupe_sanguin" value="O-"><span>O<sup>−</sup></span></label>
+                    </div>
+                </div>
+
+                <button type="submit" class="submit-btn" id="submitBtn">
+                    <span class="btn-text" data-i18n="enregistrer">Enregistrer & Continuer</span>
+                    <div class="btn-icon">
+                        <svg viewBox="0 0 24 24" fill="none">
+                            <path d="M5 12H19M13 6l6 6-6 6" stroke="white" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                    </div>
+                    <div class="btn-loader" style="display:none;">
+                        <div class="loader-ring"></div>
+                    </div>
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.getElementById('patientForm').addEventListener('submit', function(e) {
+    const btn = document.getElementById('submitBtn');
+    btn.querySelector('.btn-text').style.opacity = '0';
+    btn.querySelector('.btn-icon').style.display = 'none';
+    btn.querySelector('.btn-loader').style.display = 'flex';
+    btn.disabled = true;
+});
+</script>
+{% endblock %}
