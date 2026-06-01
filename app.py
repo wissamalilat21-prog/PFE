@@ -102,6 +102,11 @@ def api_patients():
     patients = get_all_patients()
     return jsonify(patients)
 
+@app.route('/patients')
+def patients_list():
+    patients = get_all_patients()
+    return render_template('patient_dashboard.html', patients=patients)
+
 if __name__ == '__main__':
     init_db()
     app.run(debug=DEBUG, host=HOST, port=PORT)
