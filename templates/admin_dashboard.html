@@ -3,29 +3,27 @@
 {% block content %}
 <div class="dashboard-page">
     <div class="dashboard-header">
-        <h1>لوحة تحكم الأدمين</h1>
-        <p>جميع المرضى المسجلين في قاعدة البيانات</p>
+        <h1 data-i18n="admin_title">لوحة تحكم الأدمين</h1>
+        <p data-i18n="admin_subtitle">جميع المرضى المسجلين في قاعدة البيانات</p>
     </div>
 
     <div class="section-card">
         <div class="table-container">
-            <table>
+            <table border="1" style="width:100%; border-collapse: collapse;">
                 <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>اللقب</th>
-                        <th>الاسم</th>
-                        <th>تاريخ الميلاد</th>
-                        <th>الجنس</th>
-                        <th>فصيلة الدم</th>
-                        <th>تاريخ التسجيل</th>
-                        <th>العمليات</th>
+                    <tr style="background-color: #00d4aa;">
+                        <th data-i18n="prenom">اللقب</th>
+                        <th data-i18n="nom">الاسم</th>
+                        <th data-i18n="birth_date">تاريخ الميلاد</th>
+                        <th data-i18n="gender">الجنس</th>
+                        <th data-i18n="blood_type">فصيلة الدم</th>
+                        <th data-i18n="reg_date">تاريخ التسجيل</th>
+                        <th data-i18n="actions">العمليات</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for patient in patients %}
                     <tr>
-                        <td>{{ patient.id }}</td>
                         <td>{{ patient.prenom }}</td>
                         <td>{{ patient.nom }}</td>
                         <td>{{ patient.date_naissance }}</td>
@@ -33,8 +31,8 @@
                         <td>{{ patient.groupe_sanguin }}</td>
                         <td>{{ patient.created_at }}</td>
                         <td>
-                            <a href="/patient/{{ patient.id }}/dashboard">Dashboard</a>
-                            <button onclick="deletePatient({{ patient.id }})">حذف</button>
+                            <a href="/patient/{{ patient.id }}/dashboard" data-i18n="dashboard">Dashboard</a>
+                            <button onclick="deletePatient({{ patient.id }})" data-i18n="delete">حذف</button>
                         </td>
                     </tr>
                     {% endfor %}

@@ -92,3 +92,76 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 });
+
+// قاموس الترجمة
+const translations = {
+    fr: {
+        admin_title: "Tableau de bord Administrateur",
+        admin_subtitle: "Tous les patients enregistrés dans la base de données",
+        prenom: "Prénom",
+        nom: "Nom",
+        birth_date: "Date de naissance",
+        gender: "Sexe",
+        blood_type: "Groupe sanguin",
+        reg_date: "Date d'inscription",
+        actions: "Actions",
+        delete: "Supprimer",
+        dashboard: "Dashboard"
+    },
+    ar: {
+        admin_title: "لوحة تحكم الأدمين",
+        admin_subtitle: "جميع المرضى المسجلين في قاعدة البيانات",
+        prenom: "اللقب",
+        nom: "الاسم",
+        birth_date: "تاريخ الميلاد",
+        gender: "الجنس",
+        blood_type: "فصيلة الدم",
+        reg_date: "تاريخ التسجيل",
+        actions: "العمليات",
+        delete: "حذف",
+        dashboard: "لوحة التحكم"
+    },
+    en: {
+        admin_title: "Admin Dashboard",
+        admin_subtitle: "All patients registered in the database",
+        prenom: "First name",
+        nom: "Last name",
+        birth_date: "Date of birth",
+        gender: "Gender",
+        blood_type: "Blood type",
+        reg_date: "Registration date",
+        actions: "Actions",
+        delete: "Delete",
+        dashboard: "Dashboard"
+    }
+};
+
+// دالة تغيير اللغة
+function setLang(lang) {
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (translations[lang] && translations[lang][key]) {
+            if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+                el.placeholder = translations[lang][key];
+            } else if (el.tagName === 'BUTTON') {
+                el.innerHTML = translations[lang][key];
+            } else {
+                el.innerText = translations[lang][key];
+            }
+        }
+    });
+    localStorage.setItem('lang', lang);
+}
+
+// تحميل اللغة المحفوظة عند بدء الصفحة
+document.addEventListener('DOMContentLoaded', () => {
+    const savedLang = localStorage.getItem('lang') || 'fr';
+    setLang(savedLang);
+    // تفعيل الزر المناسب
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.id === `btn-${savedLang}`) {
+            btn.classList.add('active');
+        }
+    });
+});
