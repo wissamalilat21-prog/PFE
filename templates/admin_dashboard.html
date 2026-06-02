@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="dashboard-page">
+    <div class="dashboard-header">
+        <h1>لوحة تحكم الأدمين</h1>
+        <p>جميع المرضى المسجلين في قاعدة البيانات</p>
+    </div>
+
+    <div class="section-card">
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>اللقب</th>
+                        <th>الاسم</th>
+                        <th>تاريخ الميلاد</th>
+                        <th>الجنس</th>
+                        <th>فصيلة الدم</th>
+                        <th>تاريخ التسجيل</th>
+                        <th>العمليات</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for patient in patients %}
+                    <tr>
+                        <td>{{ patient.id }}</td>
+                        <td>{{ patient.prenom }}</td>
+                        <td>{{ patient.nom }}</td>
+                        <td>{{ patient.date_naissance }}</td>
+                        <td>{{ patient.sexe }}</td>
+                        <td>{{ patient.groupe_sanguin }}</td>
+                        <td>{{ patient.created_at }}</td>
+                        <td>
+                            <a href="/patient/{{ patient.id }}/dashboard">Dashboard</a>
+                            <button onclick="deletePatient({{ patient.id }})">حذف</button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function deletePatient(id) {
+    if(confirm('هل أنت متأكد من حذف هذا المريض؟')) {
+        fetch(`/api/patient/${id}`, {method: 'DELETE'})
+            .then(() => location.reload());
+    }
+}
+</script>
+{% endblock %}

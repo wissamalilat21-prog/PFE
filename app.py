@@ -107,6 +107,31 @@ def patients_list():
     patients = get_all_patients()
     return render_template('patient_dashboard.html', patients=patients)
 
+# ===== نظام دخول الأدمين =====
+ADMIN_PASSWORD = "12092003"
+
+@app.route('/admin/login', methods=['GET', 'POST'])
+def admin_login():
+    if request.method == 'POST':
+        if request.form.get('password') == ADMIN_PASSWORD:
+            session['admin_logged_in'] = True
+            return redirect(url_for('admin_dashboard'))
+        else:
+            return render_template('admin_login.html', error="Code secret incorrect")
+    return render_template('admin_login.html')
+
+@app.route('/admin/logout')
+def admin_logout():
+    session.pop('admin_logged_in', None)
+    return redirect(url_for('index'))
+
+@app.route('/admin')
+def admin_dashboard():
+    if not session.get('admin_logged_in'):
+        return redirect(url_for('admin_login'))
+    patients = get_all_patients()
+    return render_template('admin_dashboard.html', patients=patients)
+
 if __name__ == '__main__':
     init_db()
     app.run(debug=DEBUG, host=HOST, port=PORT)

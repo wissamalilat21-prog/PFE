@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div style="max-width:400px; margin:100px auto; text-align:center;">
+    <h2>🔐 Accès Administrateur</h2>
+    {% if error %}
+        <p style="color:red;">{{ error }}</p>
+    {% endif %}
+    <form method="post">
+        <input type="password" name="password" placeholder="Code secret" required 
+               style="padding:10px; width:100%; margin:10px 0; border-radius:8px; border:1px solid #ccc;">
+        <button type="submit" style="padding:10px 20px; background:#00d4aa; border:none; border-radius:8px; cursor:pointer;">
+            Entrer
+        </button>
+    </form>
+</div>
+{% endblock %}

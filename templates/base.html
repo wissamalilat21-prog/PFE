@@ -46,6 +46,11 @@
                 </svg>
             </span>
         </button>
+            {% if session.admin_logged_in %}
+        <a href="/admin/logout" style="background:#00d4aa; padding:5px 10px; border-radius:5px; text-decoration:none;">🚪 Déconnexion</a>
+    {% else %}
+        <a href="/admin/login" style="background:#00d4aa; padding:5px 10px; border-radius:5px; text-decoration:none;">👑 Admin</a>
+    {% endif %}
     </div>
 </nav>
 
