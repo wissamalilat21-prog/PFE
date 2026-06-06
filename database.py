@@ -133,3 +133,11 @@ def update_sensor_data(patient_id, temperature, spo2, frequence_cardiaque, ecg_d
     
     conn.commit()
     conn.close()
+
+def delete_patient(patient_id):
+    conn = get_db()
+    cursor = conn.cursor()
+    cursor.execute('DELETE FROM consultations WHERE patient_id = ?', (patient_id,))
+    cursor.execute('DELETE FROM patients WHERE id = ?', (patient_id,))
+    conn.commit()
+    conn.close()

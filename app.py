@@ -102,6 +102,12 @@ def api_patients():
     patients = get_all_patients()
     return jsonify(patients)
 
+@app.route('/api/patient/<int:patient_id>', methods=['DELETE'])
+def delete_patient_api(patient_id):
+    from database import delete_patient
+    delete_patient(patient_id)
+    return jsonify({'success': True})
+
 @app.route('/patients')
 def patients_list():
     patients = get_all_patients()
